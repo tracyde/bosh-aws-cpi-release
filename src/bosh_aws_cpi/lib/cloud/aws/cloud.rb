@@ -768,12 +768,6 @@ module Bosh::AwsCloud
             raise ArgumentError, "Can't use access_key_id and secret_access_key with env_or_profile credentials_source"
         end
       end
-
-      if credentials_source == 'rest'
-        if options["aws"].has_key?("access_key_id") || options["aws"].has_key?("secret_access_key")
-            raise ArgumentError, "Can't use access_key_id and secret_access_key with rest credentials_source"
-        end
-      end
     end
 
     # Generates initial agent settings. These settings will be read by agent
