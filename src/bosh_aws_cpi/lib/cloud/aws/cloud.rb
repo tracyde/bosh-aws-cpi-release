@@ -58,6 +58,12 @@ module Bosh::AwsCloud
       if @aws_params[:credentials_source] == 'static'
         @aws_params[:access_key_id] = aws_properties['access_key_id']
         @aws_params[:secret_access_key] = aws_properties['secret_access_key']
+      else if @aws_params[:credentials_source] == 'rest'
+        credentials = get_credentials
+
+        @aws_params[:access_key_id] = credentials['access_key_id']
+        @aws_params[:secret_access_key] = credentials['secret_access_key']
+        @aws_params[:session_token] = credentials['session_token']
       end
 
       # AWS Ruby SDK is threadsafe but Ruby autoload isn't,
@@ -72,6 +78,33 @@ module Bosh::AwsCloud
       @instance_manager = InstanceManager.new(region, registry, elb, az_selector, @logger)
 
       @metadata_lock = Mutex.new
+    end
+
+    ##
+    # Connect to credential endpoint and grab correct credentials
+    def get_credentials
+
+      client = HTTPClient.new
+      client.connect_timeout = METADATA_TIMEOUT
+      uri = aws_properties['credentials_endpoint']
+
+      response = client.get(uri)
+      unless response.status == 200
+        cloud_error("Credentials endpoint returned " \
+                    "HTTP #{response.status}")
+      end
+
+      data = JSON.parse(response.body)
+
+      aki = data['Credentials']['AccessKeyId']
+      sak = data['Credentials']['SecretAccessKey']
+      tok = data['Credentials']['SessionToken']
+
+      credentials = { access_key_id: aki, secret_access_key: sak, session_token: tok }
+
+      rescue HTTPClient::TimeoutError
+          cloud_error("Timed out reading credentials endpoint, " \
+                      "please make sure credentials endpoint is up.")
     end
 
     ##
@@ -720,7 +753,7 @@ module Bosh::AwsCloud
     def validate_credentials_source
       credentials_source = options['aws']['credentials_source'] || 'static'
 
-      if credentials_source != 'env_or_profile' && credentials_source != 'static'
+      if credentials_source != 'env_or_profile' && credentials_source != 'static' && credentials_source != 'rest'
         raise ArgumentError, "Unknown credentials_source #{credentials_source}"
       end
 
@@ -733,6 +766,16 @@ module Bosh::AwsCloud
       if credentials_source == 'env_or_profile'
         if options["aws"].has_key?("access_key_id") || options["aws"].has_key?("secret_access_key")
             raise ArgumentError, "Can't use access_key_id and secret_access_key with env_or_profile credentials_source"
+        end
+      end
+
+      if credentials_source == 'rest'
+        if !options["aws"].has_key?("credentials_endpoint")
+            raise ArgumentError, "Must use credentials_endpoint with rest credentials_source"
+        end
+        
+        if options["aws"].has_key?("access_key_id") || options["aws"].has_key?("secret_access_key")
+            raise ArgumentError, "Can't use access_key_id and secret_access_key with rest credentials_source"
         end
       end
     end
