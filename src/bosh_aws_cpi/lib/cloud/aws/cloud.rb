@@ -60,6 +60,7 @@ module Bosh::AwsCloud
         @aws_params[:secret_access_key] = aws_properties['secret_access_key']
       elsif @aws_params[:credentials_source] == 'rest'
         credentials = get_credentials
+        puts "=========================>>>>> Creds:  '#{credentials}'"
 
         @aws_params[:access_key_id] = credentials['access_key_id']
         @aws_params[:secret_access_key] = credentials['secret_access_key']
