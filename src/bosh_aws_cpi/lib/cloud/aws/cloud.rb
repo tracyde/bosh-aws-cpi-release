@@ -755,7 +755,7 @@ module Bosh::AwsCloud
       #DET#
       print
       print "#########################################################"
-      print options['aws']
+      print options
       print "#########################################################"
       print
 
