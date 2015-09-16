@@ -62,9 +62,9 @@ module Bosh::AwsCloud
         credentials = get_credentials
         puts "=========================>>>>> Creds:  '#{credentials}'"
 
-        @aws_params[:access_key_id] = credentials['access_key_id']
-        @aws_params[:secret_access_key] = credentials['secret_access_key']
-        @aws_params[:session_token] = credentials['session_token']
+        @aws_params[:access_key_id] = credentials[:access_key_id]
+        @aws_params[:secret_access_key] = credentials[:secret_access_key]
+        @aws_params[:session_token] = credentials[:session_token]
 
         puts "=========================>>>>> Access Key ID:  '#{@aws_params[:access_key_id]}'"
         puts "=========================>>>>> Secret Access Key:  '#{@aws_params[:secret_access_key]}'"
