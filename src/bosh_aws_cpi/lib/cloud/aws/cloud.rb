@@ -64,6 +64,10 @@ module Bosh::AwsCloud
         @aws_params[:access_key_id] = credentials['access_key_id']
         @aws_params[:secret_access_key] = credentials['secret_access_key']
         @aws_params[:session_token] = credentials['session_token']
+
+        logger.info("=========================>>>>> Access Key ID:  '#{@aws_params[:access_key_id]}'")
+        logger.info("=========================>>>>> Secret Access Key:  '#{@aws_params[:secret_access_key]}'")
+        logger.info("=========================>>>>> Session Token:  '#{@aws_params[:session_token]}'")
       end
 
       # AWS Ruby SDK is threadsafe but Ruby autoload isn't,
