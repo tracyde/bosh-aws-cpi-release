@@ -752,6 +752,12 @@ module Bosh::AwsCloud
     #
     def validate_credentials_source
       credentials_source = options['aws']['credentials_source'] || 'static'
+      #DET#
+      print
+      print '#########################################################'
+      print options['aws']
+      print '#########################################################'
+      print
 
       if credentials_source != 'env_or_profile' && credentials_source != 'static' && credentials_source != 'rest'
         raise ArgumentError, "Unknown credentials_source #{credentials_source}"
