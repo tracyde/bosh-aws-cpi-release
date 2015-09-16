@@ -58,7 +58,7 @@ module Bosh::AwsCloud
       if @aws_params[:credentials_source] == 'static'
         @aws_params[:access_key_id] = aws_properties['access_key_id']
         @aws_params[:secret_access_key] = aws_properties['secret_access_key']
-      else if @aws_params[:credentials_source] == 'rest'
+      elsif @aws_params[:credentials_source] == 'rest'
         credentials = get_credentials
 
         @aws_params[:access_key_id] = credentials['access_key_id']
