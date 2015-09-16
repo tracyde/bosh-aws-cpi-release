@@ -752,12 +752,6 @@ module Bosh::AwsCloud
     #
     def validate_credentials_source
       credentials_source = options['aws']['credentials_source'] || 'static'
-      #DET#
-      print
-      print "#########################################################"
-      print options
-      print "#########################################################"
-      print
 
       if credentials_source != 'env_or_profile' && credentials_source != 'static' && credentials_source != 'rest'
         raise ArgumentError, "Unknown credentials_source #{credentials_source}"
@@ -776,10 +770,6 @@ module Bosh::AwsCloud
       end
 
       if credentials_source == 'rest'
-        if !options["aws"].has_key?("credentials_endpoint")
-            raise ArgumentError, "Must use credentials_endpoint with rest credentials_source"
-        end
-        
         if options["aws"].has_key?("access_key_id") || options["aws"].has_key?("secret_access_key")
             raise ArgumentError, "Can't use access_key_id and secret_access_key with rest credentials_source"
         end
