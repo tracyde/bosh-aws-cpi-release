@@ -86,6 +86,7 @@ module Bosh::AwsCloud
 
       client = HTTPClient.new
       client.connect_timeout = METADATA_TIMEOUT
+      print aws_properties['credentials_endpoint']
       uri = aws_properties['credentials_endpoint']
 
       response = client.get(uri)
