@@ -20,9 +20,6 @@ cpi_lambda = lambda do
     raise "Could not find cloud properties in the configuration"
   end
   cloud_properties = cpi_config['cloud']['properties']
-  print "############################"
-  print cloud_properties
-  print "############################"
   Bosh::Clouds::Aws.new(cloud_properties)
 end
 
