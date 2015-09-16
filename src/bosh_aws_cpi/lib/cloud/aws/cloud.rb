@@ -30,6 +30,11 @@ module Bosh::AwsCloud
       @logger = Bosh::Clouds::Config.logger
       aws_logger = @logger
 
+      print
+      print "##############################"
+      print aws_properties
+      print "##############################"
+
       @aws_params = {
         credentials_source: aws_properties['credentials_source'] || 'static',
         region:            aws_properties['region'],
